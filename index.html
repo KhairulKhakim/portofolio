@@ -2043,6 +2043,120 @@
     from { opacity: 0; transform: scale(0.96); }
     to { opacity: 1; transform: scale(1); }
   }
+/* ── THEME PICKER ── */
+.theme-picker {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0;
+}
+
+.theme-toggle-btn {
+  background: var(--green);
+  border: none;
+  color: white;
+  width: 36px;
+  padding: 10px 0;
+  border-radius: 10px 0 0 10px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: -2px 2px 12px rgba(0,0,0,0.15);
+  transition: background 0.2s;
+  writing-mode: vertical-rl;
+  letter-spacing: 1px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.theme-toggle-btn:hover { background: var(--green-dark); }
+
+.theme-panel {
+  background: white;
+  border-radius: 14px 0 0 14px;
+  padding: 16px 14px;
+  box-shadow: -4px 4px 24px rgba(0,0,0,0.13);
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 160px;
+}
+
+.theme-panel.open { display: flex; }
+
+.theme-panel-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gray-500);
+  margin-bottom: 4px;
+}
+
+.theme-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.theme-opt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px 6px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.theme-opt:hover { background: var(--gray-100); }
+.theme-opt.active { border-color: var(--green); }
+
+.theme-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid rgba(0,0,0,0.08);
+}
+
+.theme-opt span {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gray-700);
+  text-align: center;
+}
+
+.theme-divider {
+  height: 1px;
+  background: var(--gray-300);
+  margin: 2px 0;
+}
+
+.theme-reset {
+  background: none;
+  border: 1.5px solid var(--gray-300);
+  border-radius: 8px;
+  padding: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-500);
+  cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.theme-reset:hover {
+  border-color: var(--green);
+  color: var(--green-dark);
+}
 </style>
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
@@ -2052,5 +2166,126 @@
   <button class="lb-next" onclick="lbNext()">›</button>
   <div class="lb-caption" id="lbCaption"></div>
 </div>
+<!-- THEME PICKER -->
+<div class="theme-picker">
+  <button class="theme-toggle-btn" onclick="toggleThemePanel()" title="Ganti Tema">🎨 TEMA</button>
+  <div class="theme-panel" id="themePanel">
+    <div class="theme-panel-title">Pilih Tema</div>
+    <div class="theme-options">
+      <div class="theme-opt active" id="opt-default" onclick="applyTheme('default')" title="Hijau (Default)">
+        <div class="theme-swatch" style="background: linear-gradient(135deg, #5cb85c, #3a7d3a)"></div>
+        <span>Hijau</span>
+      </div>
+      <div class="theme-opt" id="opt-blue" onclick="applyTheme('blue')" title="Biru">
+        <div class="theme-swatch" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8)"></div>
+        <span>Biru</span>
+      </div>
+      <div class="theme-opt" id="opt-purple" onclick="applyTheme('purple')" title="Ungu">
+        <div class="theme-swatch" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9)"></div>
+        <span>Ungu</span>
+      </div>
+      <div class="theme-opt" id="opt-orange" onclick="applyTheme('orange')" title="Oranye">
+        <div class="theme-swatch" style="background: linear-gradient(135deg, #f97316, #c2410c)"></div>
+        <span>Oranye</span>
+      </div>
+      <div class="theme-opt" id="opt-rose" onclick="applyTheme('rose')" title="Merah Muda">
+        <div class="theme-swatch" style="background: linear-gradient(135deg, #f43f5e, #be123c)"></div>
+        <span>Pink</span>
+      </div>
+      </div>
+    <div class="theme-divider"></div>
+    <button class="theme-reset" onclick="applyTheme('default')">↺ Reset Default</button>
+  </div>
+</div>
+
+<script>
+const themes = {
+  default: {
+    '--green': '#5cb85c',
+    '--green-dark': '#3a7d3a',
+    '--green-light': '#e8f5e8',
+    '--green-mid': '#7ecb7e',
+    '--lime': '#84cc16',
+    '--lime-light': '#f0fdf0',
+    '--black': '#0f1117',
+    '--dark': '#1a1f2e',
+    '--white': '#ffffff',
+    '--gray-100': '#f3f4f6',
+  },
+  blue: {
+    '--green': '#3b82f6',
+    '--green-dark': '#1d4ed8',
+    '--green-light': '#dbeafe',
+    '--green-mid': '#60a5fa',
+    '--lime': '#0ea5e9',
+    '--lime-light': '#eff6ff',
+    '--black': '#0f1117',
+    '--dark': '#1e3a5f',
+    '--white': '#ffffff',
+    '--gray-100': '#f0f4ff',
+  },
+  purple: {
+    '--green': '#8b5cf6',
+    '--green-dark': '#6d28d9',
+    '--green-light': '#ede9fe',
+    '--green-mid': '#a78bfa',
+    '--lime': '#7c3aed',
+    '--lime-light': '#f5f3ff',
+    '--black': '#0f1117',
+    '--dark': '#2e1065',
+    '--white': '#ffffff',
+    '--gray-100': '#f5f3ff',
+  },
+  orange: {
+    '--green': '#f97316',
+    '--green-dark': '#c2410c',
+    '--green-light': '#ffedd5',
+    '--green-mid': '#fb923c',
+    '--lime': '#ea580c',
+    '--lime-light': '#fff7ed',
+    '--black': '#0f1117',
+    '--dark': '#431407',
+    '--white': '#ffffff',
+    '--gray-100': '#fff7ed',
+  },
+  rose: {
+    '--green': '#f43f5e',
+    '--green-dark': '#be123c',
+    '--green-light': '#ffe4e6',
+    '--green-mid': '#fb7185',
+    '--lime': '#e11d48',
+    '--lime-light': '#fff1f2',
+    '--black': '#0f1117',
+    '--dark': '#4c0519',
+    '--white': '#ffffff',
+    '--gray-100': '#fff1f2',
+  },
+};
+
+function toggleThemePanel() {
+  document.getElementById('themePanel').classList.toggle('open');
+}
+
+function applyTheme(name) {
+  const theme = themes[name];
+  const root = document.documentElement;
+  Object.entries(theme).forEach(([key, val]) => root.style.setProperty(key, val));
+  document.querySelectorAll('.theme-opt').forEach(o => o.classList.remove('active'));
+  document.getElementById('opt-' + name)?.classList.add('active');
+  localStorage.setItem('selectedTheme', name);
+}
+
+// Tutup panel kalau klik di luar
+document.addEventListener('click', e => {
+  const picker = document.querySelector('.theme-picker');
+  if (!picker.contains(e.target)) {
+    document.getElementById('themePanel').classList.remove('open');
+  }
+});
+
+// Load tema tersimpan
+const savedTheme = localStorage.getItem('selectedTheme');
+if (savedTheme && themes[savedTheme]) applyTheme(savedTheme);
+</script>
 </body>
 </html>
